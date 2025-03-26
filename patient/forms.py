@@ -8,15 +8,14 @@ from django.http import JsonResponse
 class LoginForm(forms.Form):
       username = forms.CharField()
       password = forms.CharField()
-      userid = forms.CharField(required=False)
+      
 
+class HospitalUserLoginForm(forms.Form):
+    email = forms.EmailField()
+    username = forms.CharField(required=False)
+    password = forms.CharField()
+    role = forms.CharField()
 
-
-# class ProfessionalLoginForm(forms.Form):
-#     email = forms.EmailField()
-#     password = forms.CharField()
-#     plan = forms.CharField(required=False)
-#     userid = forms.CharField(required=False)
 
 class HospitalForm(forms.Form):
     name = forms.CharField()
@@ -43,3 +42,26 @@ class HospitalForm(forms.Form):
         if password!= confirm_password:
             raise ValidationError('Invalid password')
      
+     
+     
+class DoctorCreateForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField(required=False)
+    country = forms.CharField(required=False)
+    gender = forms.CharField()
+    dob = forms.DateTimeField(required=False)
+    email = forms.EmailField()
+    mobile = forms.CharField()
+    username = forms.CharField()
+    password = forms.CharField()
+    specialization = forms.CharField()
+    license_number = forms.CharField()
+    experience = forms.IntegerField()
+    working_hours = forms.JSONField(
+        widget=forms.Textarea(attrs={"placeholder": 'Example: {"Monday": ["09:00-12:00", "14:00-18:00"], "Tuesday": ["10:00-16:00"]}'})
+    )
+
+   
+   
+   
+   
