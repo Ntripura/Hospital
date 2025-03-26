@@ -61,6 +61,24 @@ class DoctorCreateForm(forms.Form):
         widget=forms.Textarea(attrs={"placeholder": 'Example: {"Monday": ["09:00-12:00", "14:00-18:00"], "Tuesday": ["10:00-16:00"]}'})
     )
 
+
+class PatientCreateForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField(required=False)
+    country = forms.CharField(required=False)
+    gender = forms.CharField()
+    dob = forms.DateTimeField(required=False)
+    email = forms.EmailField()
+    mobile = forms.CharField()
+    username = forms.CharField()
+    password = forms.CharField()
+    specialization = forms.CharField()
+    license_number = forms.CharField()
+    experience = forms.IntegerField()
+    working_hours = forms.JSONField(
+        widget=forms.Textarea(attrs={"placeholder": 'Example: {"Monday": ["09:00-12:00", "14:00-18:00"], "Tuesday": ["10:00-16:00"]}'})
+    )
+
    
    
    
