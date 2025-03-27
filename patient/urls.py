@@ -9,6 +9,7 @@ urlpatterns = [
    
    #path('userdetails/<str:pk>/', views.Login.as_view()),
    path('createdoctor/',views.DoctorDetails.as_view()),
+   path('registerpatient/',views.PatientDetails.as_view()),
    path('loginuser/',views.LoginUser.as_view()),
  #  path('userupdate/<str:pk>/',views.UpdateConsumer.as_view()), 
    

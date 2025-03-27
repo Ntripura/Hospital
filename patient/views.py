@@ -167,6 +167,80 @@ class DoctorDetails(View):
             return JsonResponse({'error':'true','msg':'Doctor creation failed','form':form.errors})
         
         
+class PatientDetails(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(PatientDetails, self).dispatch(request, *args, **kwargs)
+    
+    @authenticate
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        form = forms.PatientCreateForm(data)
+        
+        if form.is_valid():
+            fname = form.cleaned_data['first_name']
+            lname = form.cleaned_data['last_name']
+            gen = form.cleaned_data['gender']
+            dob = form.cleaned_data['dob']
+            mob = form.cleaned_data['mobile']
+            hfn = form.cleaned_data['house_flat_no']
+            strt = form.cleaned_data['street']
+            ctown = form.cleaned_data['city_town']
+            st = form.cleaned_data['state']
+            contry = form.cleaned_data['country']
+            zipc = form.cleaned_data['zipcode']
+            em = form.cleaned_data['email']
+            uname = form.cleaned_data['username']
+            pswd = form.cleaned_data['password']
+            patient = form.cleaned_data['patient_type']
+            bg = form.cleaned_data['blood_group']
+            dis = form.cleaned_data['diseases']
+            prev_surg = form.cleaned_data['previous_surgery']
+            allergy = form.cleaned_data['allergies']
+            phistory = form.cleaned_data['previous_history_notes']
+            diagnise = form.cleaned_data['diagonised_on']
+            visit_d = form.cleaned_data['visit_date']
+            medicine = form.cleaned_data['medication']
+            dose = form.cleaned_data['dosage']
+            freq = form.cleaned_data['frequency']
+            inst = form.cleaned_data['instructions']
+            pdate = form.cleaned_data['prescribed_date']
+            contact_name = form.cleaned_data['emergency_contact_name ']
+            relation = form.cleaned_data['patient_relationship']
+            contact_phone = form.cleaned_data['emergency_contact_phone ']
+            now = datetime.now(timezone.utc)
+            time =now.strftime("%Y-%m-%d %H:%M:%S")
+            hash_password = make_password(pswd)
+            con = request.user['id']
+            pat = models.PatientModel(hospital = con,first_name =fname, last_name = lname,
+                                      gender = gen,dob = dob,mobile = mob,
+                                     house_flat_no=hfn,street = strt,city_town = ctown,state = st,
+                                     country = contry,zipcode = zipc,email = em,username = uname,
+                                     password=pswd,patient_type = patient,blood_group = bg,
+                                     diseases = dis,previous_surgery = prev_surg,allergies = allergy,
+                                     previous_history_notes= phistory, diadonised_on = diagnise,
+                                     visit_date = visit_d,medication = medicine,dosage = dose,
+                                     frequency = freq,instructions = inst,prescribed_date = pdate,
+                                     emergency_contact_name= contact_name,patient_relationship=relation,
+                                     emergency_contact_phone= contact_phone,created_at = time
+                                      
+                                      )     
+                     
+            pat.save()
+            hos = models.HospitalUserGroup(hospital = con,patient_id = pat,
+                                           username = pat.username,password = pat.password,
+                                           password_hash = hash_password, created = pat.created_at,
+                                           isadmin = False, role = 'patient'
+                                           )
+            hos.save()
+  
+            return JsonResponse({'error': 'false', 'msg': 'Patient is created successfully'})
+        else:
+            return JsonResponse({'error':'true','msg':'patient creation failed','form':form.errors})
+        
+                
+        
+        
 class LoginUser(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -181,12 +255,13 @@ class LoginUser(View):
             uname = form.cleaned_data['username']
             pswd = form.cleaned_data['password']
             roles = form.cleaned_data['role']
-            
+            #doc = []
             huser = models.HospitalUserGroup.objects.filter(username=uname).first()
             if huser.username and check_password(pswd,huser.password_hash):    
                 if huser.isadmin==True and roles == huser.role: 
                     return JsonResponse({'error': 'false', 'msg': 'Welcome admin'})
                 elif huser.isadmin == False and roles=='doctor':
+                    
                     return JsonResponse({'error': 'false', 'msg': 'Welcome doctor'})
                 else:
                     return JsonResponse({'error': 'false', 'msg': 'Welcome patient'})

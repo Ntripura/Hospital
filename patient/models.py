@@ -15,9 +15,9 @@ class Address(EmbeddedDocument):
     
 
 class EmergencyContact(EmbeddedDocument):
-    name = StringField()
-    relationship = StringField()
-    phone = StringField()
+    emergency_contact_name = StringField()
+    patient_relationship = StringField()
+    emergency_contact_phone = StringField()
     
     
 class MedicalHistory(EmbeddedDocument):
@@ -53,6 +53,7 @@ class PatientModel(Document):
     mobile = fields.StringField()
     address = EmbeddedDocumentField(Address)
     email = fields.EmailField()
+    username = fields.StringField()
     password = fields.StringField()
     password_hash = fields.StringField()
     patient_type = fields.StringField()
