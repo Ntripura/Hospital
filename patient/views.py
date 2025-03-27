@@ -205,25 +205,29 @@ class PatientDetails(View):
             freq = form.cleaned_data['frequency']
             inst = form.cleaned_data['instructions']
             pdate = form.cleaned_data['prescribed_date']
-            contact_name = form.cleaned_data['emergency_contact_name ']
+            contact_name = form.cleaned_data['emergency_contact_name']
             relation = form.cleaned_data['patient_relationship']
-            contact_phone = form.cleaned_data['emergency_contact_phone ']
+            contact_phone = form.cleaned_data['emergency_contact_phone']
             now = datetime.now(timezone.utc)
             time =now.strftime("%Y-%m-%d %H:%M:%S")
             hash_password = make_password(pswd)
             con = request.user['id']
-            pat = models.PatientModel(hospital = con,first_name =fname, last_name = lname,
-                                      gender = gen,dob = dob,mobile = mob,
-                                     house_flat_no=hfn,street = strt,city_town = ctown,state = st,
-                                     country = contry,zipcode = zipc,email = em,username = uname,
-                                     password=pswd,patient_type = patient,blood_group = bg,
+            addr = models.Address(house_flat_no=hfn,street = strt,city_town = ctown,state = st,
+                                     country = contry,zipcode = zipc)
+            med_history =models.MedicalHistory(blood_group = bg,
                                      diseases = dis,previous_surgery = prev_surg,allergies = allergy,
-                                     previous_history_notes= phistory, diadonised_on = diagnise,
+                                     previous_history_notes= phistory, )
+            contact = models.EmergencyContact(emergency_contact_name= contact_name,patient_relationship=relation,
+                                     emergency_contact_phone= contact_phone)
+            pat = models.PatientModel(hospital = con,first_name =fname, last_name = lname,
+                                      gender = gen,dob = dob,mobile = mob,address = addr,
+                                     email = em,username = uname,
+                                     password=pswd,patient_type = patient,medicalhistory =med_history,
+                                     diagonised_on = diagnise,
                                      visit_date = visit_d,medication = medicine,dosage = dose,
                                      frequency = freq,instructions = inst,prescribed_date = pdate,
-                                     emergency_contact_name= contact_name,patient_relationship=relation,
-                                     emergency_contact_phone= contact_phone,created_at = time
-                                      
+                                     emergencycontact = contact,
+                                     created_at = time
                                       )     
                      
             pat.save()
