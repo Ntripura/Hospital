@@ -11,7 +11,7 @@ from patient import db
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from datetime import timedelta, datetime, timezone
+from datetime import datetime,timedelta, timezone
 from Hospital.auth import authenticate, validate_payload
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
@@ -109,7 +109,9 @@ class Login(View):
                     "username": hos.username,
                     "id": id,
                     "role":huser.role,
-                    'exp': datetime.now(timezone.utc) + timedelta(seconds=1800)
+                    #'exp': datetime.now(timezone.utc) + timedelta(seconds=1800)
+                    'exp':  timezone.now() + timedelta(seconds=1800)
+                   
                 }
                 SECRET = settings.SECRET_KEY
                 token = jwt.encode(payload, SECRET, algorithm='HS256')
