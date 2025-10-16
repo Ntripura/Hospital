@@ -24,3 +24,10 @@ steps:
       source venv/bin/activate
       python manage.py test
     displayName: 'Run Django tests'
+
+    
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(System.DefaultWorkingDirectory)'
+    artifactName: 'drop'
+    publishLocation: 'Container'
